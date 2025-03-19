@@ -5,7 +5,11 @@ require_once ROOT_PATH . '/classes/User.php';
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new User();
 
-    $validationErrors = $user->validate($_POST);
+    // Saving values from form to ensure inputs value stays if error accures
+    $name = htmlspecialchars($_POST['name']) ?? '';
+    $email = htmlspecialchars($_POST['email']) ?? '';
+
+    $validationErrors = $user->validateSignup($_POST);
 
     if(!empty($validationErrors)) {
         $validationFailure = true;
@@ -13,6 +17,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         if (!$user->insert($_POST)) {
             $errorMessage = 'It was not possible to insert the new user';
+        } else {
+            header('Location: ' . BASE_URL . '/index.php');
         }
     }
 }
@@ -30,11 +36,11 @@ include_once '../public/header.php';
     <form action="signup.php" method="POST">
         <div>
             <label for="name">Name</label>
-            <input type="text" name="name" id="name">
+            <input type="text" name="name" id="name" value=<?=isset($name)? $name :''?>>
         </div>
         <div>
             <label for="email">Email</label>
-            <input type="email" name="email" id="email">
+            <input type="email" name="email" id="email" value=<?=isset($email)? $email :''?>>
         </div>
         <div>
             <label for="pwd">Password</label>

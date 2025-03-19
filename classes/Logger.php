@@ -1,7 +1,5 @@
 <?php
 
-require_once '../initialise.php';
-
 Class Logger
 {
     private const LOG_DIRECTORY = ROOT_PATH . '/log'; // defining directory path
